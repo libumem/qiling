@@ -778,5 +778,6 @@ class ELFTest(unittest.TestCase):
         ql.os.stdin = pipe.SimpleInStream(0)
         ql.os.stdin.write(b"stop\n")
         ql.run()
+        del ql
 if __name__ == "__main__":
     unittest.main()
