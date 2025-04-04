@@ -770,6 +770,13 @@ class ELFTest(unittest.TestCase):
 
         del ql
 
-
+    def test_elf_linux_x8664_epoll_simple(self):
+        # TODO: Get the example in rootfs
+        rootfs = "../examples/rootfs/x8664_linux"
+        argv = r"../examples/rootfs/x8664_linux/epoll-0".split()
+        ql = qiling.Qiling(argv, rootfs, verbose=QL_VERBOSE.DEBUG)
+        ql.os.stdin = pipe.SimpleInStream(0)
+        ql.os.stdin.write(b"stop\n")
+        ql.run()
 if __name__ == "__main__":
     unittest.main()
