@@ -779,5 +779,9 @@ class ELFTest(unittest.TestCase):
         ql.os.stdin.write(b"stop\n")
         ql.run()
         del ql
+
+    def test_elf_linux_x8664_epoll_server(self):
+        pass
+        del ql
 if __name__ == "__main__":
     unittest.main()
