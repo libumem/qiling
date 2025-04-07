@@ -6,7 +6,6 @@
 import http.client
 import platform
 import re
-import socket
 import sys
 import os
 import threading
@@ -635,7 +634,6 @@ class ELFTest(unittest.TestCase):
         response = conn.getresponse()
         feedback = response.read()
         self.assertEqual('httpd_test_successful', feedback.decode())
-
 
 if __name__ == "__main__":
     unittest.main()

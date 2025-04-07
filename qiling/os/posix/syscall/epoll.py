@@ -1,3 +1,16 @@
+import qiling
+from qiling.const import *
+from qiling.os.posix.const import *
+from qiling.os.const import *
+from qiling.os.filestruct import ql_file
+import select
+from ctypes import *
+from qiling.os import struct
+import struct
+from qiling.os.filestruct import PersistentQlFile
+from qiling.extensions import pipe
+import sys
+
 class QlEpollObj:
     def __init__(self, epoll_object):
         self._epoll_object = epoll_object
@@ -43,9 +56,14 @@ class QlEpollObj:
             return 0
         return 1
 
-
+'''
+Recursively checks each epoll instance's 'watched'
+fds for an instance of epoll being watched.
+If a chain of over 5 levels is detected, return
+1, which will return ELOOP in ql_epoll_wait
+'''
 def check_epoll_depth(ql_fd_list, epolls_list, depth):
-    if depth == 6:
+    if depth == 7:
         return 1
     new_epolls_list = []
     flag = 0
@@ -59,7 +77,10 @@ def check_epoll_depth(ql_fd_list, epolls_list, depth):
             check_epoll_depth(ql_fd_list, new_epolls_list, depth + 1)
     return 0
 
-
+'''
+Modify an existing epoll
+man 7 epoll for more details
+'''
 def ql_epoll_ctl(ql: qiling.Qiling, epfd: int, op: int, fd: int, event: POINTER):
     # Basic sanity checks first
     if event != 0:
@@ -152,6 +173,10 @@ def ql_epoll_ctl(ql: qiling.Qiling, epfd: int, op: int, fd: int, event: POINTER)
     return 0
 
 
+'''
+Wait on an existing epoll for events specified
+earlier. man 7 epoll_wait for more info
+'''
 def ql_epoll_wait(
     ql: qiling.Qiling, epfd: int, epoll_events: POINTER, maxevents: int, timeout: int
 ):
@@ -203,8 +228,6 @@ def ql_epoll_wait(
 Use select.epoll for underlying implementation,
 just as select.poll is used for emulating poll()
 """
-
-
 def ql_epoll_create1(ql: qiling.Qiling, flags: int):
     if flags != select.EPOLL_CLOEXEC and flags != 0:
         return EINVAL
@@ -217,11 +240,8 @@ def ql_epoll_create1(ql: qiling.Qiling, flags: int):
 
 """
 Almost identical to above, but can't simply wrap
-because of the slightly different args and the different
-syscall number
+because of the slightly different prototype
 """
-
-
 def ql_epoll_create(ql: qiling.Qiling, size: int):
     if size < 0:
         return EINVAL
