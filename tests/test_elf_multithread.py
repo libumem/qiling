@@ -6,6 +6,7 @@
 import http.client
 import platform
 import re
+import socket
 import sys
 import os
 import threading
