@@ -772,7 +772,6 @@ class ELFTest(unittest.TestCase):
 
         del ql
 
-    unittest.skip("hangs, possibly bc of newfstatat?")
     def test_elf_linux_x8664_epoll_simple(self):
         def hook_newfstatat(ql: Qiling, dirfd: int, path: int, buf: int, flags: int):
             return 1
