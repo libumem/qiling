@@ -804,7 +804,7 @@ class ELFTest(unittest.TestCase):
             time.sleep(3)  # give time for the server to listen
             conn = http.client.HTTPConnection('localhost', 8000, timeout=10)
             conn.request('GET', '/')
-
+            conn.close()
         # use threads here to test how the server
         # handles the request
         client_thread = threading.Thread(target=client, daemon=True)
